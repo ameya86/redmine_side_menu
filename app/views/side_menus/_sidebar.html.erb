@@ -1,0 +1,55 @@
+<% issues_by_category = Issue.by_category(@project) %>
+<% issues_by_version = Issue.by_version(@project) %>
+
+<%# カテゴリ %>
+<div id="side_menu_category">
+<h3><%= l(:field_category) %></h3>
+<% @project.issue_categories.each do |category| %>
+<%= category.name %>
+(<%=
+aggregate_link(issues_by_category,
+               {"category_id" => category.id, "closed" => 0},
+               {:controller => 'issues', :action => 'index', :project_id => @project,
+                :set_filter => 1,
+                :category_id => category.id,
+                :status_id => "o"},
+                :title => l(:label_open_issues))
+%>/<%=
+aggregate_link(issues_by_category,
+               {"category_id" => category.id},
+               {:controller => 'issues', :action => 'index', :project_id => @project,
+                :set_filter => 1,
+                :category_id => category.id,
+                :status_id => "*"},
+                :title => l(:label_total))
+%>)
+<br />
+<% end %>
+</div>
+
+<%# バージョン %>
+<div id="side_menu_version">
+<h3><%= l(:field_version) %></h3>
+<% @project.versions.each do |version|
+  next if version.closed? %>
+<%= link_to_version(version) %>
+(<%=
+aggregate_link(issues_by_version,
+               {"fixed_version_id" => version.id, "closed" => 0},
+               {:controller => 'issues', :action => 'index', :project_id => @project,
+                :set_filter => 1,
+                :fixed_version_id => version.id,
+                :status_id => "o"},
+                :title => l(:label_open_issues))
+%>/<%=
+aggregate_link(issues_by_version,
+               {"fixed_version_id" => version.id},
+               {:controller => 'issues', :action => 'index', :project_id => @project,
+                :set_filter => 1,
+                :fixed_version_id => version.id,
+                :status_id => "*"},
+                :title => l(:label_total))
+%>)
+<br />
+<% end %>
+</div>
