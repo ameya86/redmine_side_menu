@@ -1,3 +1,4 @@
+<% unless @project.nil? %>
 <% issues_by_category = Issue.by_category(@project) %>
 <% issues_by_version = Issue.by_version(@project) %>
 
@@ -53,3 +54,4 @@ aggregate_link(issues_by_version,
 <br />
 <% end %>
 </div>
+<% end %>
